@@ -1,25 +1,36 @@
 const router = require('express').Router();
 const Cars = require('./cars-model');
+const { checkCarId,
+    checkCarPayload,
+    checkVinNumberValid,
+    checkVinNumberUnique
+} = require('./cars-middleware');
 
 router.get('/', async (req, res, next) => {
     try {
-        console.log('GET REQUEST to cars API');
+        const cars = await Cars.getAll();
+        if (!cars) {
+            res.send([]);
+        } else {
+            res.status(200).json(cars);
+        }
     } catch (err) {
         next(err);
     }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', checkCarId, async (req, res, next) => {
     try {
-        console.log('GET REQUEST BY ID to cars API');
+        res.status(200).json(req.car);
     } catch (err) {
         next(err);
     }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', checkCarPayload, async (req, res, next) => {
     try {
-        console.log('POST REQUEST to cars API');
+        const newCar = await Cars.create(req.body);
+        res.status(201).json(newCar);
     } catch (err) {
         next(err);
     }
