@@ -17,7 +17,7 @@ async function create(car) {
 
 async function getByVin(vin) {
   const result = await db('cars').where('vin', vin);
-  return result;
+  return result[0];
 }
 
 module.exports = {
