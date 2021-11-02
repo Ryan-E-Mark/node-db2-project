@@ -29,7 +29,8 @@ router.get('/:id', checkCarId, async (req, res, next) => {
 
 router.post('/', checkCarPayload, async (req, res, next) => {
     try {
-        const newCar = await Cars.create(req.body);
+        const newCarId = await Cars.create(req.body);
+        const newCar = await Cars.getById(newCarId);
         res.status(201).json(newCar);
     } catch (err) {
         next(err);
